@@ -1,6 +1,5 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.LinkedList;
+import java.io.*;
+import java.util.*;
 
 public class Gramatica{
 
@@ -68,7 +67,16 @@ public class Gramatica{
 	}
 
 
-	public void AFD(){
+	public void AFD(String N){
+		File archivo = new File(N);
+
+		try{
+		PrintWriter write = new PrintWriter(N);
+		write.println("Hola :)");
+		write.close();
+		}catch(Exception e){
+			System.err.println("--------------------");
+		}
 		
 	}
 
@@ -82,7 +90,7 @@ public class Gramatica{
 
 	public String toString(){
 		String y= "\nReglas de Produccion: ";
-		for(int i=0;i<(this.NotTerminals.size());i++){
+		for(int i=0;i<(this.Prules.size());i++){
 			y = y + "\n"+this.NotTerminals.get(i)+"-->"+this.Prules.get(i);
 		}
 
@@ -110,5 +118,6 @@ public class Gramatica{
 
 		Gramatica G = new Gramatica(gramatica);
 		System.out.println(G.toString());
+		G.AFD("prueba.afd");
 	}
 }
