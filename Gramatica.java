@@ -3,8 +3,8 @@ import java.util.*;
 
 public class Gramatica{
 
-	LinkedList<Character> NotTerminals;
-	LinkedList<Character> Terminals;
+	LinkedList<String> NotTerminals;
+	LinkedList<String> Terminals;
 	char Start;
 	LinkedList<LinkedList<String>> Prules;
 
@@ -12,21 +12,21 @@ public class Gramatica{
 		try{
 			BufferedReader leer = new BufferedReader(new FileReader(Path));
 			String aux = leer.readLine();
-			LinkedList<Character> auxx = new LinkedList<Character>();
+			LinkedList<String> auxx = new LinkedList<String>();
 			String[] T = aux.split(",");
 
 			for(int i=0;i<T.length;i++){
-				auxx.add(T[i].charAt(0));
+				auxx.add(T[i]);
 			}
 
 			this.NotTerminals = auxx;
 
 			aux = leer.readLine();
-			auxx = new LinkedList<Character>();
+			auxx = new LinkedList<String>();
 			T = aux.split(",");
 
 			for(int i=0;i<T.length;i++){
-				auxx.add(T[i].charAt(0));
+				auxx.add(T[i]);
 			}
 			this.Terminals = auxx;
 
@@ -39,7 +39,7 @@ public class Gramatica{
 			int i = 0;
 			
 			while(aux != null){
-				if(Character.toString(aux.charAt(0)).equals(Character.toString(this.NotTerminals.get(i)))){
+				if(aux.substring(0,1).equals(this.NotTerminals.get(i))){
 					r.add(aux.substring(3,aux.length()));
 					aux = leer.readLine();
 					if(aux == null){
@@ -56,6 +56,9 @@ public class Gramatica{
 			}
 			
 			this.Prules=P;
+			if(this.Prules.size()!=this.NotTerminals.size()){
+				this.NotTerminals.removeLast();
+			}
 			
 
 			
@@ -65,23 +68,172 @@ public class Gramatica{
 			System.err.println("--------------------");
 		}
 	}
+	
+	LinkedList<String> ag;
+	public void RC(){
+		for(int i=0;i<(this.NotTerminals.size());i++){
+			for(int j=0;j<(this.Prules.get(i).size());j++){
+				if(this.Prules.get(i).get(j).length()!=1){ 
+					if(!(this.NotTerminals.contains(this.Prules.get(i).get(j).substring(1,2)))){
+						if(this.NotTerminals.get(i).length()==1){
+							String au = this.NotTerminals.get(i)+(j+1);
+							this.NotTerminals.add(au);
+							ag = new LinkedList<String>();
+							ag.add(this.Prules.get(i).get(j).substring(1,this.Prules.get(i).get(j).length()));
+							this.Prules.get(i).set(j,this.Prules.get(i).get(j).substring(0,1)+au);
+							this.Prules.add(ag);
+							
+						}else if((this.NotTerminals.get(i).length())>1){
+							System.out.println("j: "+j);
+							String au = this.NotTerminals.get(i).substring(0,1)+(Integer.parseInt(this.NotTerminals.get(i).substring(1,this.NotTerminals.get(i).length()))+(j+1));
+							this.NotTerminals.add(au);
+							ag = new LinkedList<String>();
+							ag.add(this.Prules.get(i).get(j).substring(1,this.Prules.get(i).get(j).length()));
+							this.Prules.get(i).set(j,this.Prules.get(i).get(j).substring(0,1)+au);
+							this.Prules.add(ag);
+						}
 
-
-	public void AFD(String N){
-		File archivo = new File(N);
-
-		try{
-		PrintWriter write = new PrintWriter(N);
-		write.println("Hola :)");
-		write.close();
-		}catch(Exception e){
-			System.err.println("--------------------");
+				}
+			  }else{this.Prules.get(i).set(j,(this.Prules.get(i).get(j)+"F"));}
+			}
 		}
+		this.NotTerminals.add("F");
+	}
+
+
+	public void AFD(String D,String A)throws Exception{
+		AFN a = new AFN(A);
+		File archivo = new File(D);
+
+		PrintWriter write = new PrintWriter(D);
+		String alfabeto = "";
+
+		for(int i=0;i<(a.Alf().size());i++){
+			if(!(i == (a.Alf().size()-1))){
+				alfabeto = alfabeto+ a.Alf().get(i)+",";
+			}else{
+				alfabeto = alfabeto+ a.Alf().get(i);
+			}
+		}
+
+		write.println(alfabeto);
+
+		
+
+		LinkedList<String> F = new LinkedList<String>();
+		LinkedList<LinkedList<String>> Estados = new LinkedList<LinkedList<String>>();
+		Estados.add(a.Lunion(a.lambda("1"),F));
+		LinkedList<LinkedList<Integer>> T = new LinkedList<LinkedList<Integer>>();
+		LinkedList<Integer> Finales = new LinkedList<Integer>();
+		for(int i=0; i<(a.Alfabeto.size());i++){
+			T.add(new LinkedList<Integer>());
+		}
+		a.cambio(Estados, T,Finales);
+		write.println(Estados.size()+1);
+		String aux = "";
+		for(int i=0;i<(Finales.size());i++){
+			if(i==(Finales.size()-1)){
+				aux = aux+Finales.get(i);
+			}else{aux = aux+Finales.get(i)+",";}
+		}
+		write.println(aux);
+		aux ="0,";
+		for(int i=0;i<(T.size());i++){
+			for(int k=0;k<(T.get(i).size());k++){
+				if(k==(T.get(i).size()-1)){
+					aux = aux+T.get(i).get(k);
+				}else{aux = aux+T.get(i).get(k)+",";}
+			}
+			write.println(aux);
+			aux ="0,";
+		}
+		
+		write.close();
 		
 	}
 
-	public void AFN(){
+	public void AFN(String path)throws Exception{
+		this.RC();
+		System.out.println(this.toString());
+		File archivo = new File(path);
+		PrintWriter write = new PrintWriter(path);
+		String aux = "";
+		System.out.println("Empezando");
+		for(int i=0;i<(this.Terminals.size());i++){
+			if(i == (this.Terminals.size()-1)){
+				aux = aux + this.Terminals.get(i);
+			}else{aux = aux + this.Terminals.get(i)+",";}
+		}
+		System.out.println("alfabeto: "+aux);
+		write.println(aux);
+		aux ="";
+		write.println(this.NotTerminals.size()+1);
+		System.out.println("N. de Estados: "+(this.NotTerminals.size()+1));
+		System.out.println("Final: "+(this.NotTerminals.indexOf("F")+1));
+		write.println(this.NotTerminals.indexOf("F")+1);
+		LinkedList<LinkedList<LinkedList<String>>> Tran = new LinkedList<LinkedList<LinkedList<String>>>();
+		for(int i=0;i<(this.Terminals.size()+2);i++){
+			LinkedList<LinkedList<String>> a = new LinkedList<LinkedList<String>>();
+			for(int j=0;j<(this.NotTerminals.size()+1);j++){
+				if(i==0){
+					LinkedList<String> b = new LinkedList<String>();
+					b.add(""+j);
+					a.add(b);
+				}else{ 
+					LinkedList<String> b = new LinkedList<String>();
+					if(j==0){
+						b.add("0");
+					}
+					
+					a.add(b);
+				 }
+			}
+			Tran.add(a);
+		}
+		
+		System.out.println("Listas construidas..");
+		
 
+		for(int i=0;i<(this.Prules.size());i++){
+			for(int k=0;k<(this.Prules.get(i).size());k++){
+				String au = this.Prules.get(i).get(k);
+				if(!(this.NotTerminals.contains(au.substring(0,1)))){
+					int p= this.Terminals.indexOf(au.substring(0,1));
+					Tran.get(p+1).get(i+1).add(""+(this.NotTerminals.indexOf(au.substring(1,au.length()))+1));
+				}else{System.out.println(au.substring(0,1)); Tran.get(0).get(i+1).add(""+(this.NotTerminals.indexOf(au.substring(0,1))+1));}
+			}
+			
+		}
+
+		for(int k=0;k<(Tran.size()-1);k++){
+			LinkedList<LinkedList<String>> u = Tran.get(k);
+			for(int i=0;i<(u.size());i++){
+				LinkedList<String> o = u.get(i);
+				String x = "";
+				if(!(o.isEmpty())){ 
+					for(int j=0;j<(o.size());j++){
+						if(j==(o.size()-1)){
+							x = x+o.get(j);
+						}else{
+							x = x+o.get(j)+";";
+						}
+					}
+				}else{x = x+"0";}
+
+				if(i==(u.size()-1)){
+					aux = aux+x;
+				}else{
+					aux = aux+x+",";
+				}
+			}
+			write.println(aux);
+			aux = "";	
+		}
+
+
+
+
+		write.close();
 	}
 
 	public void CHECK(){
@@ -117,7 +269,9 @@ public class Gramatica{
 		}*/
 
 		Gramatica G = new Gramatica(gramatica);
-		System.out.println(G.toString());
-		G.AFD("prueba.afd");
-	}
+		G.AFN("prueba.afn");
+		G.AFD("prueba.afd", "/home/yoshrd/Desktop/proj3i/prueba.afn");
+	   	//G.AFD("prueba.afd", gramatica);
+	 }
+		
 }
