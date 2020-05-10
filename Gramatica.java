@@ -233,8 +233,33 @@ public class Gramatica{
 		write.close();
 	}
 
-	public void CHECK(){
-		
+	public void CHECK(String usepath, String pathtoprove, String nombreoriginala){
+		try{
+			AFD aff = new AFD(usepath);
+			PrintWriter write = new PrintWriter(nombreoriginala);
+			String aux = "";
+			Scanner in = new Scanner(new File(pathtoprove));
+			while(in.hasNextLine()){
+				String linea = in.nextLine();
+				int lol = linea.indexOf(",");
+				//System.out.println(linea);
+				//System.out.println(lol);
+				String fund = linea.substring(0, lol);
+				//System.out.println(fund); 
+				boolean afk = aff.accept(fund);
+				if(afk){
+					aux = "Aceptada";
+				}else{
+					aux = "Rechazada";
+				}
+				//System.out.println(aux);
+				write.println(aux);
+			} 
+			write.close();
+		}catch(Exception e){
+			System.out.println("--------------------");
+		}
+
 	}
 
 	public String toString(){
@@ -249,25 +274,53 @@ public class Gramatica{
 
 
 	public static void main(String[] args) throws Exception{
+		System.out.println("Bienvenidos al codigo :3");
+
+
 		String gramatica = args[0];
-	/*	String bandera = args[1];
+		String bandera = args[1];
 		String salida = args[2];
 		boolean n1 = bandera.equals("-afn");
 		boolean n2 = bandera.equals("-afd");
 		boolean n3 = bandera.equals("-check");
+		Gramatica G = new Gramatica(gramatica);
 		if(n1){
-
+			G.AFN(salida);	
 		}else if(n2){
-
+			String op = G.creadordearchivo("n");
+			String jo = "./" + op;
+			G.AFN(op);   
+			G.AFD(salida, jo);	
 		}else if(n3){
 			String cuerdas = args[3];
+			String tt = G.creadordearchivo("n");
+			String ar = G.creadordearchivo("d");
+			//System.out.println(tt);
+			//System.out.println(ar);
+			G.AFN(tt);  
+			String yy = "./" + tt ; 
+			//System.out.println(yy);
+			G.AFD(ar,yy);
+			String nuevo = "./" + ar;
+			G.CHECK(nuevo, cuerdas, salida);
 		}else{
 			System.out.println("NO SEAN PENDEJOS PS");
-		}*/
-
-		Gramatica G = new Gramatica(gramatica); //aqui se crea la Gramatica
-		G.AFN("prueba.afn");  //aqui creo el 
-		G.AFD("prueba.afd", "/home/yoshrd/Desktop/proj3i/prueba.afn"); //aqui se crea el afd con el afn creado anteriormente
+		}
+		
+		//G.AFN("prueba.afn");  //aqui creo el 
+		//G.AFD("prueba.afd", ""); //aqui se crea el afd con el afn creado anteriormente
 	 }
+
+	public String creadordearchivo(String letter){
+		Random rd = new Random();
+		String nombre = "";
+		for(int o = 0; o < 5 ; o++){
+			int aloha = rd.nextInt(26) + 65;
+			char ellen = (char) aloha;
+			nombre += ellen;
+		}
+		nombre += ".af" + letter;
+		return nombre;
+	}
 		
 }

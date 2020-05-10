@@ -127,7 +127,7 @@ public class AFD{
 				Acept = true;
 			}
 		}else{Acept = false;}
-
+		//System.out.println(Acept);
 
 		return Acept;	
 	}
