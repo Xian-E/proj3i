@@ -76,20 +76,21 @@ public class AFN{
 	int q =0;
 	public LinkedList<String> Lunion(LinkedList<String> x,LinkedList<String> F){
 		LinkedList<String> o = (LinkedList<String>) F.clone();
-		if((x.size()==1)&&!(F.contains(x.getFirst()))){
-
-			o.add(x.getFirst());
-		}else{
-
-			for(int i=1;i<x.size();i++){
-				if(!(o.contains(x.getFirst()))){
-					o.add(x.get(0));
-					q++;
-					o=(Lunion(lambda(x.get(i)),o));
-					F=new LinkedList<String>();
-			}
+		for(int j=0;j<(x.size());j++){
+			LinkedList<String> n = (LinkedList<String>) this.lambda(x.get(j)).clone();
+			if(n.size()==1){
+				if(!(o.contains(n.get(0)))){
+					o.add(n.get(0));
 				}
-	   }
+			}else{
+				if(!(o.contains(n.get(0)))){
+					o.add(n.get(0));
+				}
+					n.removeFirst();
+					o= this.Lunion(n, o);
+
+			}
+		}
 	 return o;
 	   
 	}
@@ -128,17 +129,26 @@ public class AFN{
 					G.add(L);
 					for(int h=0;h<(L.size());h++){
 						if(this.FStates.contains(Integer.parseInt(L.get(h)))){
-							u.add(G.indexOf(L)+1);
+							if(!(u.contains(G.indexOf(L)+1))){
+								u.add(G.indexOf(L)+1);
+							}
 						}
 					}
-					E.get(i).add(G.indexOf(L)+1);
+				if(L.get(0).equals("0")&&(L.size()==1)){
+					E.get(i).add(0);
+				}else{E.get(i).add(G.indexOf(L)+1);}
+					
 				}else{
 					for(int h=0;h<(L.size());h++){
 						if(this.FStates.contains(Integer.parseInt(L.get(h)))){
-							u.add(G.indexOf(L)+1);
+							if(!(u.contains(G.indexOf(L)+1))){
+								u.add(G.indexOf(L)+1);
+							}
 						}
 					}
-					E.get(i).add(G.indexOf(L)+1);
+					if(L.get(0).equals("0")&&(L.size()==1)){
+						E.get(i).add(0);
+					}else{E.get(i).add(G.indexOf(L)+1);}
 				}
 				
 			}
@@ -172,12 +182,6 @@ public class AFN{
 		de la forma que desee. 
 	*/
 	public static void main(String[] args) throws Exception{
-		String f = args[0];
-		AFN x = new AFN(f);
-		System.out.println(x.toString());
-		LinkedList<String> F = new LinkedList<String>();
-		//System.out.println(x.lambda("2"));
-		System.out.println(x.Lunion(x.getT(1,x.lambda("1")),F));
 		
 	}
 }

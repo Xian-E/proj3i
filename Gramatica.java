@@ -102,6 +102,7 @@ public class Gramatica{
 
 
 	public void AFD(String D,String A)throws Exception{
+		//"D" es el nombre del archivo afd a crear y "A" es la direccion del archivo afn a convertir.
 		AFN a = new AFN(A);
 		File archivo = new File(D);
 
@@ -154,22 +155,19 @@ public class Gramatica{
 
 	public void AFN(String path)throws Exception{
 		this.RC();
-		System.out.println(this.toString());
+		//RC es para convertir a forma normal la gramatica, solo por si te da curiosidad xD, pero no toques nada de nada :)
 		File archivo = new File(path);
 		PrintWriter write = new PrintWriter(path);
 		String aux = "";
-		System.out.println("Empezando");
+		
 		for(int i=0;i<(this.Terminals.size());i++){
 			if(i == (this.Terminals.size()-1)){
 				aux = aux + this.Terminals.get(i);
 			}else{aux = aux + this.Terminals.get(i)+",";}
 		}
-		System.out.println("alfabeto: "+aux);
 		write.println(aux);
 		aux ="";
 		write.println(this.NotTerminals.size()+1);
-		System.out.println("N. de Estados: "+(this.NotTerminals.size()+1));
-		System.out.println("Final: "+(this.NotTerminals.indexOf("F")+1));
 		write.println(this.NotTerminals.indexOf("F")+1);
 		LinkedList<LinkedList<LinkedList<String>>> Tran = new LinkedList<LinkedList<LinkedList<String>>>();
 		for(int i=0;i<(this.Terminals.size()+2);i++){
@@ -191,7 +189,6 @@ public class Gramatica{
 			Tran.add(a);
 		}
 		
-		System.out.println("Listas construidas..");
 		
 
 		for(int i=0;i<(this.Prules.size());i++){
@@ -200,7 +197,7 @@ public class Gramatica{
 				if(!(this.NotTerminals.contains(au.substring(0,1)))){
 					int p= this.Terminals.indexOf(au.substring(0,1));
 					Tran.get(p+1).get(i+1).add(""+(this.NotTerminals.indexOf(au.substring(1,au.length()))+1));
-				}else{System.out.println(au.substring(0,1)); Tran.get(0).get(i+1).add(""+(this.NotTerminals.indexOf(au.substring(0,1))+1));}
+				}else{ Tran.get(0).get(i+1).add(""+(this.NotTerminals.indexOf(au.substring(0,1))+1));}
 			}
 			
 		}
@@ -268,10 +265,9 @@ public class Gramatica{
 			System.out.println("NO SEAN PENDEJOS PS");
 		}*/
 
-		Gramatica G = new Gramatica(gramatica);
-		G.AFN("prueba.afn");
-		G.AFD("prueba.afd", "/home/yoshrd/Desktop/proj3i/prueba.afn");
-	   	//G.AFD("prueba.afd", gramatica);
+		Gramatica G = new Gramatica(gramatica); //aqui se crea la Gramatica
+		G.AFN("prueba.afn");  //aqui creo el 
+		G.AFD("prueba.afd", "/home/yoshrd/Desktop/proj3i/prueba.afn"); //aqui se crea el afd con el afn creado anteriormente
 	 }
 		
 }
