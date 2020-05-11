@@ -233,10 +233,11 @@ public class Gramatica{
 		write.close();
 	}
 
-	public void CHECK(String usepath, String pathtoprove, String nombreoriginala){
+	public void CHECK(String usepath, String pathtoprove, String salida){
 		try{
 			AFD aff = new AFD(usepath);
-			PrintWriter write = new PrintWriter(nombreoriginala);
+			File altf4 = new File(salida);
+			PrintWriter write = new PrintWriter(salida);
 			String aux = "";
 			Scanner in = new Scanner(new File(pathtoprove));
 			while(in.hasNextLine()){
@@ -280,6 +281,7 @@ public class Gramatica{
 		String gramatica = args[0];
 		String bandera = args[1];
 		String salida = args[2];
+		System.out.println(salida);
 		boolean n1 = bandera.equals("-afn");
 		boolean n2 = bandera.equals("-afd");
 		boolean n3 = bandera.equals("-check");
@@ -288,40 +290,24 @@ public class Gramatica{
 			G.AFN(salida);	
 		}else if(n2){
 			String op = G.creadordearchivo(gramatica,"n");
-			String jo = "./" + op;
-			G.AFN(op);   
+			G.AFN(op); 
+			String jo = "./" + op;  
 			G.AFD(salida, jo);	
 		}else if(n3){
-			if(args.length == 3){
-				System.out.println(gramatica);
-				String tt = G.creadordearchivo(gramatica, "n");
-				String ar = G.creadordearchivo(gramatica, "d");
-				System.out.println(tt);
-				System.out.println(ar);
-				G.AFN(tt);  
-				String yy = "./" + tt ; 
-				//System.out.println(yy);
-				G.AFD(ar,yy);
-				String nuevo = "./" + ar;
-				String cuerdas = G.mamamia(tt) ;
-				System.out.println(cuerdas);
-				G.CHECK(nuevo, salida, cuerdas);
-
-			}else{
-				System.out.println(gramatica);
-				String cuerdas = args[3];
-				System.out.println(cuerdas);
-				String tt = G.creadordearchivo(gramatica, "n");
-				String ar = G.creadordearchivo(gramatica, "d");
-				System.out.println(tt);
-				System.out.println(ar);
-				G.AFN(tt);  
-				String yy = "./" + tt ; 
-				//System.out.println(yy);
-				G.AFD(ar,yy);
-				String nuevo = "./" + ar;
-				G.CHECK(nuevo, cuerdas, salida);
-			}
+			//System.out.println(gramatica);
+			String cuerdas = args[3];
+			//System.out.println(cuerdas);
+			String tt = G.creadordearchivo(gramatica, "n");
+			String ar = G.creadordearchivo(gramatica, "d");
+			//System.out.println(tt);
+			//System.out.println(ar);
+			G.AFN(tt);  
+			String yy = "./" + tt ; 
+			//System.out.println(yy);
+			G.AFD(ar,yy);
+			String nuevo = "./" + ar;
+			G.CHECK(nuevo, cuerdas, salida);
+			
 
 		}else{
 			System.out.println("NO SEAN PENDEJOS PS");
@@ -343,8 +329,8 @@ public class Gramatica{
 	public String mamamia(String tt){
 		int off = tt.indexOf(".");
 		String flash = tt.substring(0,off);
-		String cuerdas = "comprobacion"+".txt";
-		System.out.println(cuerdas);
+		String cuerdas = "comprobacion" + ".txt";
+		//System.out.println(cuerdas);
 		return cuerdas;
 	}
 		
