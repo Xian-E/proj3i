@@ -343,7 +343,7 @@ public class Gramatica{
 	public String mamamia(String tt){
 		int off = tt.indexOf(".");
 		String flash = tt.substring(0,off);
-		String cuerdas = "comprobacion_" + flash + ".txt";
+		String cuerdas = "comprobacion"+".txt";
 		System.out.println(cuerdas);
 		return cuerdas;
 	}
