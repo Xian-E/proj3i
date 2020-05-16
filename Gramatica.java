@@ -242,12 +242,12 @@ public class Gramatica{
 			Scanner in = new Scanner(new File(pathtoprove));
 			while(in.hasNextLine()){
 				String linea = in.nextLine();
-				int lol = linea.indexOf(",");
+				//int lol = linea.indexOf(",");
 				//System.out.println(linea);
 				//System.out.println(lol);
-				String fund = linea.substring(0, lol);
+				//String fund = linea.substring(0, lol);
 				//System.out.println(fund); 
-				boolean afk = aff.accept(fund);
+				boolean afk = aff.accept(linea);
 				if(afk){
 					aux = "Aceptada";
 				}else{
@@ -278,9 +278,9 @@ public class Gramatica{
 		System.out.println("Bienvenidos al codigo :3");
 
 
-		String gramatica = args[0];
-		String bandera = args[1];
-		String salida = args[2];
+		String gramatica = args[0]; //jala la gramatica
+		String bandera = args[1]; //bandera
+		String salida = args[2]; //salida
 		System.out.println(salida);
 		boolean n1 = bandera.equals("-afn");
 		boolean n2 = bandera.equals("-afd");
@@ -295,7 +295,7 @@ public class Gramatica{
 			G.AFD(salida, jo);	
 		}else if(n3){
 			//System.out.println(gramatica);
-			String cuerdas = args[3];
+			String cuerdas = args[3]; //jala las cuerdas
 			//System.out.println(cuerdas);
 			String tt = G.creadordearchivo(gramatica, "n");
 			String ar = G.creadordearchivo(gramatica, "d");
